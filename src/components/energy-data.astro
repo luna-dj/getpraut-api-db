@@ -1,5 +1,6 @@
 ---
 import EnergyData1 from "./EnergyData.svelte";
+import DevelopmentBanner from "./DevelopmentBanner.svelte";
 //const id = Astro.url.searchParams.get('id') || '' ;
 //const socketId = Astro.url.searchParams.get('power') || '';
 //console.log(socketId);
@@ -19,6 +20,7 @@ const data = await response.json();
     <title>Energy Data</title>
   </head>
   <body>
-    <EnergyData1 data={data} />
+    <DevelopmentBanner client:load />
+    <EnergyData1 client:load data={data} />
   </body>
 </html>
