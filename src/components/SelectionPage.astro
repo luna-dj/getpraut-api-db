@@ -1,0 +1,72 @@
+---
+const { request } = Astro;
+const url = new URL(request.url);
+const selectedSocketId = url.searchParams.get('socketid');
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Socket ID</title>
+</head>
+ <div class="p-4 m-2 bg-gray-200 rounded-lg shadow-md">
+ <div class="grid lg:grid-cols-2 gap-4 mt-4 md:grid-cols-1">
+
+  <div class="container grid lg:grid-cols-1 gap-4 mt-4 md:grid-cols-1">
+    <h2>Select a Socket ID</h2>
+    <form id="socketForm">
+      <label for="socketid">Choose Socket ID:</label>
+      <select id="socketid" name="socketid" required>
+        <option value="" disabled selected>Select an option</option>
+        <option value="7.1" selected={selectedSocketId === '7.1'}>7.1</option>
+        <option value="7.2" selected={selectedSocketId === '7.2'}>7.2</option>
+        <option value="7.3" selected={selectedSocketId === '7.3'}>7.3</option>
+        <option value="7.4" selected={selectedSocketId === '7.4'}>7.4</option>
+      </select>
+      <button type="submit">Submit</button>
+      <h1>The current URL origin is: {Astro.url.origin}</h1>
+    </form>
+
+    <!-- Optionally display the selected Socket ID -->
+    <div id="result" class="result" style={selectedSocketId ? '' : 'display: none;'}>
+      <strong>Selected Socket ID:</strong>
+      <p id="selectedSocketid">{selectedSocketId || ''}</p>
+    </div>
+  </div>
+  </div>
+</div>
+  <script>
+    const Astro = {
+      url: new URL(window.location.href)
+    };
+
+    document.getElementById('socketForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+      const socketidInput = document.querySelector('#socketid') as HTMLInputElement;
+const socketid = socketidInput.value;
+
+      //const socketid = document.getElementById('socketid').value;
+      if (socketid) {
+        // Redirect to the desired URL with the socketid as a query parameter
+        window.location.href = `${window.location.origin}/?socketid=${encodeURIComponent(socketid)}`;
+      }
+    });
+
+    // Handle browser navigation (e.g., back/forward buttons)
+    window.addEventListener('popstate', function() {
+      const params = new URLSearchParams(window.location.search);
+      const socketid = params.get('socketid');
+
+      if (socketid) {
+        (document.getElementById('socketid') as HTMLInputElement).value = socketid;
+        document.getElementById('selectedSocketid').textContent = socketid;
+        document.getElementById('result').style.display = 'block';
+      } else {
+        (document.getElementById('socketid') as HTMLInputElement).value = '';
+        (document.getElementById('result') as HTMLElement).style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>

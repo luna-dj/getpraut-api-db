@@ -1,6 +1,11 @@
 ---
 import EnergyData1 from "./EnergyData.svelte";
 import DevelopmentBanner from "./DevelopmentBanner.svelte";
+import SelectionPage from "./SelectionPage.astro";
+import Calendar from "./Calendar.astro";
+const { request } = Astro;
+const url = new URL(request.url);
+//const selectedSocketId = url.searchParams.get('socketid') || '7.1';
 //const id = Astro.url.searchParams.get('id') || '' ;
 //const socketId = Astro.url.searchParams.get('power') || '';
 //console.log(socketId);
@@ -10,17 +15,21 @@ import DevelopmentBanner from "./DevelopmentBanner.svelte";
 //const response = await fetch(`https://vps01.getpraut.nl/influxapi/getdata.php?socketid=${searchQuery}`);
 //onst data = await response.json();
 //console.log(data)---
-const socketid = Astro.url.searchParams.get('socketid') || '';
-const response = await fetch(`https://vps01.getpraut.nl/influxapi/getdata.php?socketid=${socketid}`);
+const Mydate = new Date
+
+const currentTimestamp = Date.now() / 1000;
+const socketid = Astro.url.searchParams.get('socketid') || '7.1';
+const response = await fetch(`https://vps01.getpraut.nl/influxapi/getdata.php?timestamp=${currentTimestamp}&socketid=${socketid}&before=1`);
 const data = await response.json();
+console.log(data);
 ---
 
 <html>
   <head>
     <title>Energy Data</title>
-  </head>
-  <body>
-    <DevelopmentBanner client:load />
-    <EnergyData1 client:load data={data} />
+      <Calendar client:load />
+      <SelectionPage />
+      <DevelopmentBanner client:load />
+      <EnergyData1 client:load data={data} />
   </body>
 </html>
